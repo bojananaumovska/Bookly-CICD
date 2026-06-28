@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bookly-config
+  namespace: bookly
+data:
+  DB_HOST: "library-db"
+  DB_PORT: "1433"
+  DB_NAME: "BooklyDb"
+  ASPNET_ENVIRONMENT: "Production"

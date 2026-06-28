@@ -11,6 +11,8 @@ namespace Library_Managment_Project
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
+            if (routes["Default"] != null)
+                return;
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
