@@ -120,8 +120,22 @@ This structure enforces referential integrity and models real-world inventory co
 
 ## 6. Currently Working On
 
-- **Containerizing the application** – packaging the web app and database in Docker containers to simplify deployment, testing, and environment setup.
 - **Email notification service** – sending automatic emails to users for loan creation, due dates, and overdue notifications.  
 - **Audit logging** – tracking user actions like creating, editing, or deleting loans and books for accountability.  
 - **Migration to ASP.NET Core** – upgrading the project to the modern ASP.NET Core framework for better performance, cross-platform support, and maintainability.  
 - **AI-based Book Recommendation System** – suggesting books to users based on their past loans using an AI model, so each user sees personalized book suggestions.
+
+## 7. Containerization and CI/CD
+
+The application has been containerized and integrated into an automated CI/CD pipeline.
+
+**Docker**
+- Since Bookly runs on .NET Framework 4.7.2, the app is published locally via Visual Studio and executed inside a Linux container using the Mono runtime and mono-xsp4 web server, avoiding a full migration to .NET Core.
+- A separate SQL Server 2019 Linux container replaces LocalDB, since LocalDB is Windows-only.
+- `docker-compose.yml` orchestrates both the `web` and `db` services on a shared network.
+
+**CI/CD — GitHub Actions**
+- On every push to `main`, a workflow automatically builds the Docker image and pushes it to DockerHub (`bojananaumovska/bookly-mono:latest`), split into two jobs:
+  - `build` - builds the image and saves it as an artifact
+  - `push` - loads the artifact, authenticates with DockerHub, and pushes the image
+- Image available at: [hub.docker.com/r/bojananaumovska/bookly-mono](https://hub.docker.com/r/bojananaumovska/bookly-mono/tags)
