@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: bookly
+spec:
+  clusterIP: None
+  selector:
+    app: mssql
+  ports:
+    - port: 1433
+      targetPort: 1433
