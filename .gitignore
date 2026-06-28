@@ -6,3 +6,5 @@ packages/
 .env
 .env.*
 !.env.example
+!publish/bin/
+!publish/bin/**
