@@ -1,0 +1,48 @@
+name: CI Docker Build and Push
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t bookly-mono:${{ github.sha }} .
+
+      - name: Save image as tar
+        run: docker save bookly-mono:${{ github.sha }} -o bookly-image.tar
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: bookly-image.tar
+
+  push:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+
+      - name: Load Docker image
+        run: docker load -i bookly-image.tar
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Tag image
+        run: docker tag bookly-mono:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/bookly-mono:latest
+
+      - name: Push image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/bookly-mono:latest

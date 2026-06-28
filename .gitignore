@@ -1,0 +1,8 @@
+bin/ 
+obj/ 
+.vs/ 
+*.user 
+packages/ 
+.env
+.env.*
+!.env.example
